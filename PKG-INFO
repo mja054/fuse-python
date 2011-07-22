@@ -1,0 +1,17 @@
+Metadata-Version: 1.0
+Name: fuse-python
+Version: 0.2.1
+Summary: Bindings for FUSE
+Home-page: http://fuse.sourceforge.net/wiki/index.php/FusePython
+Author: Csaba Henk
+Author-email: csaba.henk@creo.hu
+License: LGPL
+Description: UNKNOWN
+Platform: posix
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)
+Classifier: Operating System :: POSIX
+Classifier: Programming Language :: C
+Classifier: Programming Language :: Python
+Classifier: Topic :: System :: Filesystems

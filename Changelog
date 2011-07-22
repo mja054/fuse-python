@@ -1,0 +1,721 @@
+2010-04-14 22:09 +0000  hartwork  <hartwork>  (c490d831ae11TAGS: 0.2.1
+)
+
+	* make_release.sh:
+	Fix generation of MANIFEST.in in make_release.sh (tested against hg
+	1.5.1)
+
+2010-04-14 00:36 +0000  hartwork  <hartwork>  (c020e4b55af4)
+
+	* fuse.py, fuseparts/__init__.py:
+	Fix previous fix for ctors of Timespec and Flock to be backwards
+	compatible, bump version to 0.2.1
+
+2009-04-19 04:35 +0000  dzsekijo  <dzsekijo>  (35c03a19c703)
+
+	* fuseparts/_fusemodule.c:
+	Fix incorrect handling of getxattr for the size=0 case
+
+	Report/fix by Facundo Batista, via Sebastien Delafond, cf.
+	https://bugs.launchpad.net/ubuntu/+source/python-fuse/+bug/325860
+
+2008-08-29 11:58 +0000  dzsekijo  <dzsekijo>  (c00f5e77a9c4)
+
+	* fuse.py:
+	absolutify the mount path when "fetch_mp" is set
+
+2008-04-24 14:52 +0000  dzsekijo  <dzsekijo>  (23eee8905dd0)
+
+	* fuseparts/_fusemodule.c:
+	Make the "fetchattr_soft" macro tolerate if the value of the given
+	attribute is None.
+
+	This fixes the issue that returning an instance created by
+	os.stat_result() from the "getattr" method caused EINVAL. Issue was
+	reported by Forest Bond.
+
+2008-02-05 14:13 +0000  dzsekijo  <dzsekijo>  (b8a0b93a5f38)
+
+	* fuseparts/_fusemodule.c:
+	Handle fsdestroy() vs. threading issue more sensibly than it was in
+	6dde0b0ad433.
+
+	Now fsdestroy() works both when it's called as a DESTROY handler and
+	when it's called within the lib's final clean-up.
+
+2008-01-23 19:32 +0000  dzsekijo  <dzsekijo>  (9cf98e5e74c8)
+
+	* fuse.py:
+	fix some FuseStruct initializations
+
+2007-12-11 15:17 +0000  dzsekijo  <dzsekijo>  (6dde0b0ad433)
+
+	* fuseparts/_fusemodule.c:
+	Remove Python locks from the destroy method.
+
+	Deadlock issue was reported by Forest Bond.
+
+	NOTES:
+
+	These locks were undisputedly bogus as the point when destroy is
+	called is out of the scope where Python locking is set up.
+
+	Removing them and doing nothing more (as it's done now) is also OK
+	if we assume that the module is used for writing a standalone
+	program where thread management is completely handled by the fuse
+	library -- as in this case the lib will ensure that there will be
+	only one thread when the destroy method is called.
+
+	However, this way:
+	 - We rely on an implementation detail of the lib.
+	 - If the Python fuse module is intended to be used in a "library
+	fashion", ie. as a part of a more complex program where threads
+	are created apart from the fuselib ones, then the locks might be
+	needed for destroy.
+
+	Anyway, I couldn't really extend the scope of Python locking in a
+	way that embraces destroy's invocation and actually works, so I
+	stick with simply removing those locks for now.
+
+2007-06-29 21:46 +0200  toor  <toor@www.creo.hu>  (221d0a3816cb)
+
+	* .hgtags:
+	Added tag 0.2 for changeset 7d014ec0dc2bd3be2edf8e65c05f78665812ebc9
+
+2007-06-29 19:45 +0000  dzsekijo  <dzsekijo>  (7d014ec0dc2bTAGS: 0.2
+)
+
+	* fuseparts/__init__.py:
+	bump version
+
+2007-06-29 19:37 +0000  dzsekijo  <dzsekijo>  (672c835f58bd)
+
+	* FAQ, README.new_fusepy_api:
+	minor doc fixes
+
+2007-06-24 23:08 +0000  dzsekijo  <dzsekijo>  (be075a630d06)
+
+	* fuse.py:
+	the FuseStat initializatior sets a default zero value for some of
+	the stat fields
+
+2007-06-18 15:04 +0000  dzsekijo  <dzsekijo>  (3da701e0688b)
+
+	* fuse.py:
+	check if fuse_python_api value is suitable (not just the presence of
+	a value!)
+
+2007-06-17 21:00 +0000  dzsekijo  <dzsekijo>  (bfe709f63c9c)
+
+	* fuse.py:
+	fix bug in previous commit
+
+2007-06-17 20:29 +0000  dzsekijo  <dzsekijo>  (ba300811c040)
+
+	* fuse.py:
+	Define the required fields in FuseStruct derivatives to None if
+	there is no explicit default value.
+
+	This helps users to know what fields are there to be assigned, and
+	makes it possible to iterate over the fields.
+
+2007-06-15 23:25 +0000  dzsekijo  <dzsekijo>  (92f3f49abbc5)
+
+	* fuseparts/_fusemodule.c:
+	fix side-effecty attribute access from C which bogusly set
+	PyErr_Occurred()
+
+2007-05-18 16:55 +0200  toor  <toor@www.creo.hu>  (709843241f8f)
+
+	* .hgtags:
+	Added tag 0.2-pre3 for changeset
+	104a16a228e290552d06da27f0a8d01f70c59ff1
+
+2007-05-18 14:48 +0000  dzsekijo  <dzsekijo>  (104a16a228e2TAGS: 0.2-pre3
+)
+
+	* make_release.sh:
+	further distribution streamlinining #4
+
+2007-05-18 14:23 +0000  dzsekijo  <dzsekijo>  (c7aa95b16e32)
+
+	* fuseparts/__init__.py:
+	bump version
+
+2007-05-18 14:21 +0000  dzsekijo  <dzsekijo>  (eed82fa7d1f9)
+
+	* example/hello.py, example/xmp.py, fuse.py:
+	defining fuse_python_api made mandatory
+
+2007-05-18 13:54 +0000  dzsekijo  <dzsekijo>  (059f5a11a459)
+
+	* make_release.sh:
+	further distribution streamlinining #3
+
+2007-05-18 13:47 +0000  dzsekijo  <dzsekijo>  (b9f2cdc99fe5)
+
+	* MANIFEST.in: deleted file.
+	* MANIFEST.in:
+	further distribution streamlinining cont'd
+
+2007-05-18 13:43 +0000  dzsekijo  <dzsekijo>  (5dc3a0165a72)
+
+	* example/_find_fuse_parts.py, example/hello.py, example/xmp.py,
+	make_release.sh:
+	further distribution streamlinining
+
+2007-05-15 23:55 +0200  toor  <toor@www.creo.hu>  (3019933a7a06)
+
+	* .hgtags:
+	Added tag 0.2-pre2 for changeset
+	488baa0b9517062131e17a3d24634b737f7dc733
+
+2007-05-15 21:55 +0000  dzsekijo  <dzsekijo>  (488baa0b9517TAGS: 0.2-pre2
+)
+
+	* fuseparts/__init__.py:
+	bump version
+
+2007-05-15 21:52 +0000  dzsekijo  <dzsekijo>  (f5f992f55b74)
+
+	* README.1st:
+	streamline README the 1st
+
+2007-05-15 21:47 +0000  dzsekijo  <dzsekijo>  (5e3390e7f3e1)
+
+	* make_release.sh: new file.
+	* make_release.sh:
+	automated the process of creating a release
+
+2007-05-15 17:46 +0000  dzsekijo  <dzsekijo>  (733c85179e58)
+
+	* MANIFEST.in, README.package_maintainers, util/voidspace-fusepy.css:
+	new file.
+	* AUTHORS, MANIFEST.in, README.1st, README.package_maintainers,
+	setup.py, util/voidspace-fusepy.css:
+	Meta files face lift.
+
+	- Speak directly to package maintainers about compat issues
+	- Miklos Szeredi deserves to be in AUTHORS
+	- Also add Changelog and README.new_fusepy_api.html to source distro
+	(ie. 'setup.py sdist' result)
+
+2007-05-15 13:53 +0000  dzsekijo  <dzsekijo>  (74478f369763)
+
+	* fuse.py:
+	random docstring fixes
+
+2007-05-15 13:40 +0000  dzsekijo  <dzsekijo>  (66d7b96c3f36)
+
+	* setup.py:
+	make setup.py PyPI compatible
+
+2007-05-15 00:58 +0200  toor  <toor@www.creo.hu>  (9f76415848f6)
+
+	* .hgtags: new file.
+	* .hgtags:
+	Added tag 0.2-pre1 for changeset
+	3f591e4a83c535c266a787e3771d500a5a1a8726
+
+2007-05-14 22:56 +0000  dzsekijo  <dzsekijo>  (3f591e4a83c5TAGS: 0.2-pre1
+)
+
+	* fuseparts/__init__.py:
+	make version string adhere to FUSE versioning conventions
+
+2007-05-14 22:43 +0000  dzsekijo  <dzsekijo>  (4257a80a048f)
+
+	* setup.py:
+	add support for Python egg creation
+
+2007-05-11 13:23 +0000  dzsekijo  <dzsekijo>  (7d728c9abc8d)
+
+	* README.new_fusepy_api, example/xmp.py, fuse.py,
+	fuseparts/_fusemodule.c:
+	added support for utimens and bmap methods
+
+2007-05-11 09:41 +0000  dzsekijo  <dzsekijo>  (3c311ed1fd7e)
+
+	* fuseparts/_fusemodule.c:
+	use the dedicated size_t value builder if Python supports it
+	(version >= 2.5.0)
+
+2007-05-07 23:17 +0000  dzsekijo  <dzsekijo>  (9b596857988e)
+
+	* README.1st, util/fusepychangelog.tmpl:
+	minor meta fixes
+
+2007-05-07 21:46 +0000  dzsekijo  <dzsekijo>  (5f04bdc6158a)
+
+	* example/xmp.py, fuse.py, fuseparts/_fusemodule.c:
+	add support for advisory locking ("lock" filesystem method)
+
+2007-05-07 21:28 +0000  dzsekijo  <dzsekijo>  (2b187d6cbe6a)
+
+	* fuse.py:
+	refactor the classes representing system structures
+
+2007-05-07 21:03 +0000  dzsekijo  <dzsekijo>  (2d6a424a1ff8)
+
+	* example/xmp.py:
+	Fix flush and fsync in xmp.py.
+
+	- Don't call file.flush() if file is not open for writing (a fix
+	for OS-es which adhere more to POSIX than Linux in this respect,
+	eg. *BSD).
+	- Do call file.flush() both from both of fsync and flush methods
+	because data is to be flushed out from userspace cache anyway
+	before we can go on.
+
+2007-05-02 23:10 +0000  dzsekijo  <dzsekijo>  (512466bc2226)
+
+	* README.1st, util/fusepychangelog.tmpl: new file.
+	* ChangeLog: deleted file.
+	* ChangeLog, README.1st, util/fusepychangelog.tmpl:
+	get rid of handcrafted ChangeLog
+
+2007-05-01 15:21 +0000  dzsekijo  <dzsekijo>  (d7c16bf5bc05)
+
+	* fuseparts/_fusemodule.c:
+	delete leaked in junk code
+
+2007-05-01 15:04 +0000  dzsekijo  <dzsekijo>  (c1d7570d42cd)
+
+	* ChangeLog, README.new_fusepy_api, fuse.py, fuseparts/_fusemodule.c:
+	make keep_cache and direct_io settable filewise
+
+2007-03-13 12:34 +0000  dzsekijo  <dzsekijo>  (d1e255d900e0)
+
+	* ChangeLog, fuseparts/_fusemodule.c:
+	check for float stat fields everywhere, not only on OS X
+
+2007-02-27 17:50 +0000  dzsekijo  <dzsekijo>  (0f1b88025104)
+
+	* ChangeLog, FAQ:
+	document file class inistantiation via OPEN vs. via CREATE
+
+2007-02-24 01:55 +0000  dzsekijo  <dzsekijo>  (ad3312c955ca)
+
+	* ChangeLog, fuseparts/_fusemodule.c:
+	Handle float stat fields of OS X.
+
+	Patch based on code by Paul Fredrickson.
+
+2007-01-18 23:13 +0000  dzsekijo  <dzsekijo>  (cc3a99b21a0d)
+
+	* ChangeLog, fuseparts/_fusemodule.c:
+	fix memory leak in FuseGetContext()
+
+2006-12-14 09:45 +0000  dzsekijo  <dzsekijo>  (6e369309061e)
+
+	* ChangeLog, fuseparts/_fusemodule.c:
+	Clean up header inclusions. Assisted by Eric Evans.
+
+2006-12-13 08:29 +0000  dzsekijo  <dzsekijo>  (1ff5b9f76e3c)
+
+	* ChangeLog, fuseparts/_fusemodule.c:
+	hush some warnings
+
+2006-12-12 17:44 +0000  dzsekijo  <dzsekijo>  (0d1f8d1eae07)
+
+	* ChangeLog, fuseparts/_fusemodule.c, setup.py:
+	clean up threading related code a bit, let module be compiled for
+	Pythons with no threading support
+
+2006-12-11 21:40 +0000  dzsekijo  <dzsekijo>  (0ce90746c63d)
+
+	* ChangeLog, fuseparts/_fusemodule.c:
+	Move Python locking into method handlers in order to avoid LORs. Bug
+	reported by Eric Evans. Fix based on idea and code from Miklos
+	Szeredi.
+
+2006-11-30 13:10 +0000  dzsekijo  <dzsekijo>  (91815ac716d9)
+
+	* ChangeLog, fuseparts/_fusemodule.c:
+	further refinements on Py -> C conversion
+
+2006-11-29 17:39 +0000  dzsekijo  <dzsekijo>  (e8a15cbdb696)
+
+	* ChangeLog, fuseparts/_fusemodule.c:
+	Fix bogus conversion from Python integer types to C ones when
+	C-ifying system structures. Bug reported by David Loveall.
+
+2006-10-14 20:48 +0000  dzsekijo  <dzsekijo>  (1435a49dbd16)
+
+	* README.new_fusepy_api, fuse.py:
+	announce version of the current API by means of
+	FUSE_PYTHON_API_VERSION constant
+
+2006-10-14 15:57 +0000  dzsekijo  <dzsekijo>  (c26ad4ee2ac5)
+
+	* ChangeLog, README.new_fusepy_api, example/hello.py, example/xmp.py,
+	fuse.py:
+	make fuse-python API explicitly specifiable instead of just having a
+	compat hook
+
+2006-10-12 23:53 +0000  dzsekijo  <dzsekijo>  (117dee9eb29c)
+
+	* ChangeLog, example/_find_fuse_parts.py:
+	emit a more useful error message when examples fail to import fuse
+
+2006-10-12 23:51 +0000  dzsekijo  <dzsekijo>  (85f8d5474c9c)
+
+	* fuse.py:
+	fix
+
+2006-10-12 23:24 +0000  dzsekijo  <dzsekijo>  (e60148c77170)
+
+	* ChangeLog, example/xmp.py, fuse.py, fuseparts/_fusemodule.c:
+	added support for init and destroy FUSE operations
+
+2006-08-29 10:44 +0000  dzsekijo  <dzsekijo>  (629c61b84a91)
+
+	* FAQ: new file.
+	* ChangeLog, FAQ:
+	added FAQ
+
+2006-07-20 07:36 +0000  dzsekijo  <dzsekijo>  (e04379b2c7a2)
+
+	* ChangeLog, fuseparts/_fusemodule.c:
+	Let user override FUSE_USE_VERSION. This might help in getting
+	around problems with FUSE snapshots when the API is in motion.
+	Based on report by Péter Szilágyi
+
+2006-07-17 10:26 +0000  dzsekijo  <dzsekijo>  (e1f57b73714a)
+
+	* fuseparts/setcompatwrap.py: new file.
+	* ChangeLog, INSTALL, fuse.py, fuseparts/setcompatwrap.py,
+	fuseparts/subbedopts.py:
+	Resolve some Python 2.3 compatibility problems. Issues reported by
+	Tienshiao Ma.
+
+2006-06-19 23:13 +0000  dzsekijo  <dzsekijo>  (075e6977c270)
+
+	* ChangeLog, example/xmp.py:
+	nitpick about some subtleties in xmp.py
+
+2006-06-19 22:54 +0000  dzsekijo  <dzsekijo>  (e721ed03bef4)
+
+	* ChangeLog, fuseparts/_fusemodule.c:
+	fix bogus signature upon `create' method invocation
+
+2006-06-07 09:10 +0000  dzsekijo  <dzsekijo>  (089c6a510fd3)
+
+	* fuse.py, fuseparts/subbedopts.py:
+	Fix.
+	 - fix bug in parsing two-in-one options
+	 - make SubOptsHive (FuseArgs) string representation sorted
+
+2006-06-07 08:18 +0000  dzsekijo  <dzsekijo>  (cb90dcca75e8)
+
+	* ChangeLog, fuse.py:
+	make Fuse.fuseoptref() detect "-o [foo]bar" like two-in-one options
+
+2006-06-07 07:42 +0000  dzsekijo  <dzsekijo>  (61301fbcde2e)
+
+	* ChangeLog, fuse.py, fuseparts/subbedopts.py:
+	let user specify an alternative parser class/`-o' handler for Fuse
+
+2006-06-06 22:24 +0000  dzsekijo  <dzsekijo>  (8689b8b289b2)
+
+	* ChangeLog, example/hello.py, example/xmp.py, fuse.py:
+	set True as the default value of the `fetch_mp' parser option
+
+2006-06-06 20:19 +0000  dzsekijo  <dzsekijo>  (95cc59e5556e)
+
+	* fuseparts/__init__.py, fuseparts/_fusemodule.c,
+	fuseparts/subbedopts.py: new file.
+	* _fusemeta.py, _fusemodule.c: deleted file.
+	* ChangeLog, _fusemeta.py, _fusemodule.c, example/_find_fuse_parts.py,
+	fuse.py, fuseparts/__init__.py, fuseparts/_fusemodule.c,
+	fuseparts/subbedopts.py, setup.py:
+	Restructured source tree / II.:
+	 - Created fuseparts package
+	 - <generic opt parsing code> -> fuseparts/subbedoptparse.py
+	 - _fusemeta.py -> fuseparts/__init__.py
+	 - _fusemodule.c -> fuseparts/_fusemodule.c
+
+2006-06-06 18:47 +0000  dzsekijo  <dzsekijo>  (4203f705c02c)
+
+	* INSTALL:
+	fix out-of-date information in INSTALL
+
+2006-06-06 18:39 +0000  dzsekijo  <dzsekijo>  (949399754dad)
+
+	* README.historic, example/_find_fuse_parts.py, example/hello.py,
+	example/xmp.py: new file.
+	* README, xmp.py: deleted file.
+	* AUTHORS, ChangeLog, INSTALL, README, README.historic,
+	README.new_fusepy_api, _fusemodule.c, example/_find_fuse_parts.py,
+	example/hello.py, example/xmp.py, fuse.py, xmp.py:
+	Restructured source tree, updated docs/metainformation. Source tree
+	changes:
+	 - README -> README.historic
+	 - xmp.py -> example/xmp.py
+	 - added example/hello.py (contributed by Andrew Straw)
+	 - added example/_find_fuse_parts.py (aux script)
+
+2006-06-06 07:00 +0000  dzsekijo  <dzsekijo>  (1fbfda5f4d6b)
+
+	* ChangeLog, INSTALL, README, README.new_fusepy_api:
+	updated docs
+
+2006-06-06 05:00 +0000  dzsekijo  <dzsekijo>  (b519cd385964)
+
+	* ChangeLog, fuse.py:
+	replace `foo.has_key(bar)' with `bar in foo'
+
+2006-06-06 04:44 +0000  dzsekijo  <dzsekijo>  (8ef39b485ae1)
+
+	* ChangeLog, fuse.py:
+	add support for querying any fs method in feature requester
+
+2006-06-06 01:13 +0000  dzsekijo  <dzsekijo>  (466d43dd9d10)
+
+	* ChangeLog, fuse.py, xmp.py:
+	Option parsing refactorization.
+	 - Generic suboption parsing code separated into a dedicated classes
+	 - Implement FUSE option parsing by subclassing the aforementioned
+	classes
+
+2006-06-05 00:04 +0000  dzsekijo  <dzsekijo>  (a654ef04d464)
+
+	* fuse.py, xmp.py:
+	some refinements in method naming and feature requesting
+
+2006-06-04 22:45 +0000  dzsekijo  <dzsekijo>  (c7ca4cfab5aa)
+
+	* ChangeLog, xmp.py:
+	sanitize xmp.py methods
+
+2006-06-04 19:51 +0000  dzsekijo  <dzsekijo>  (c39b74d70533)
+
+	* fuse.py, xmp.py:
+	Rewrite feature requesting interface.
+	 - rename functions: `feature_need' -> `feature_needs' and
+	`feature_req' -> `feature_assert'
+	 - give a more robust and clean implementation
+
+2006-06-04 17:37 +0000  dzsekijo  <dzsekijo>  (02c7643e7e28)
+
+	* ChangeLog, _fusemodule.c, fuse.py, xmp.py:
+	added interface for retrieving FUSE API version and requiring
+	features from the underlying library
+
+2006-06-04 14:35 +0000  dzsekijo  <dzsekijo>  (d5da0b1739b2)
+
+	* ChangeLog, _fusemodule.c, fuse.py, xmp.py:
+	Added support for the rest of FUSE methods. (flush, fgetattr,
+	ftruncate, access, getxattr, listxattr, setxattr, removexattr)
+
+2006-06-01 15:14 +0000  dzsekijo  <dzsekijo>  (9a242cf24697)
+
+	* _fusemodule.c:
+	fix bogus termination of directory reading
+
+2006-06-01 13:07 +0000  dzsekijo  <dzsekijo>  (8e83fb371afa)
+
+	* ChangeLog, fuse.py:
+	distillate Fuse instance -> <file> method proxying code into a
+	dedicated class
+
+2006-06-01 08:20 +0000  dzsekijo  <dzsekijo>  (bf58eabe6cb4)
+
+	* COPYING: new file.
+	* COPYING:
+	added licensing information
+
+2006-05-31 21:43 +0000  dzsekijo  <dzsekijo>  (f3c75ff5097f)
+
+	* ChangeLog, _fusemodule.c, fuse.py, xmp.py:
+	Update code so that it can use newer FUSE features / II. Update
+	directory related features:
+	 - Switch to readdir() from deprecated getdir() method.
+	 - Add support for new directory methods.
+	 - Make directory I/O stateful.
+	 - Extend OO wrappers to directories.
+	 - Switch from sequence based data transfer model to general
+	 - iterator based one.
+	 - Add a dedicated class to carry directory entries instead
+	 - of using tuples.
+	 - Add compact hooks.
+
+2006-05-31 16:42 +0000  dzsekijo  <dzsekijo>  (0b9eb32c7bf6)
+
+	* ChangeLog, README.new_fusepy_api, _fusemodule.c, fuse.py, xmp.py:
+	Update code so that it can use newer FUSE features / I. Make file
+	I/O stateful:
+	  - If `open' methods returns an object, that will be preserved and
+	passed around to I/O requests on the file in question.
+	  - Added support for `create' method
+	  - Wrap this mechanism into OO: file I/O methods can be implemented
+	via an user specified class.
+	  - Add warning to README.new_fusepy_api
+
+2006-05-31 16:12 +0000  dzsekijo  <dzsekijo>  (1f1f1e69e5ae)
+
+	* _fusemodule.c:
+	fix a statfs compat bug
+
+2006-05-31 14:07 +0000  dzsekijo  <dzsekijo>  (383534e25bd5)
+
+	* ChangeLog, _fusemodule.c:
+	fix stat/offset integer overflows
+
+2006-05-29 21:53 +0000  dzsekijo  <dzsekijo>  (f5f23a4aa92a)
+
+	* ChangeLog, _fusemodule.c, fuse.py:
+	Compat layer related fixes.
+
+2006-05-29 13:20 +0000  dzsekijo  <dzsekijo>  (6882690f6ada)
+
+	* _fusemodule.c:
+	one Py_DECREF was put at the wrong place...
+
+2006-05-29 13:14 +0000  dzsekijo  <dzsekijo>  (ea2a25443d91)
+
+	* ChangeLog, _fusemodule.c:
+	add some missing Py_DECREF-s
+
+2006-05-28 23:53 +0000  dzsekijo  <dzsekijo>  (ef4fd0328dd7)
+
+	* ChangeLog, _fusemodule.c:
+	Add support for st_rdev, st_blksize, st_block stat fields. Noticed
+	by Robert Bradford.
+
+2006-05-28 23:40 +0000  dzsekijo  <dzsekijo>  (9f86a81a5c2d)
+
+	* README.new_fusepy_api, xmp.py:
+	minor fixes
+
+2006-05-28 13:56 +0000  dzsekijo  <dzsekijo>  (d264bf9d8eac)
+
+	* ChangeLog, README.new_fusepy_api, _fusemodule.c, fuse.py, xmp.py:
+	Switch getattr / statfs to an object oriented interface.
+
+2006-05-27 18:58 +0000  dzsekijo  <dzsekijo>  (fd8517b6b70c)
+
+	* ChangeLog, README.new_fusepy_api, _fusemodule.c, fuse.py, xmp.py:
+	add os.statvfs() compatible statvfs method [mark statfs deprecated
+	but keep working via a compat shim]
+
+2006-05-27 11:40 +0000  dzsekijo  <dzsekijo>  (46b7014c97a3)
+
+	* _fusemodule.c:
+	Fix: require the fuse argvec to be a non-empty sequence and check it
+	properly.
+
+2006-05-27 09:06 +0000  dzsekijo  <dzsekijo>  (460f3dc9eceb)
+
+	* xmp.py:
+	fix typo in xmp.py
+
+2006-05-27 08:04 +0000  dzsekijo  <dzsekijo>  (490859b1b83b)
+
+	* README.new_fusepy_api: new file.
+	* ChangeLog, README.new_fusepy_api, _fusemeta.py, _fusemodule.c,
+	fuse.py, xmp.py:
+	New Python API with enhanced commandline handling.
+
+2006-05-27 07:23 +0000  dzsekijo  <dzsekijo>  (ec3f6efdc87c)
+
+	* _fusemeta.py: new file.
+	* ChangeLog, _fusemeta.py, fuse.py, setup.py:
+	setup.py related fixes
+
+2006-05-26 16:01 +0000  dzsekijo  <dzsekijo>  (3ff338399809)
+
+	* ChangeLog, _fusemodule.c, fuse.py, setup.py, xmp.py:
+	Syntax cleanup 2: fix indetation, uniformize look
+
+2006-05-26 15:58 +0000  dzsekijo  <dzsekijo>  (4dd8bb8c6070)
+
+	* code.leo: deleted file.
+	* ChangeLog, README, _fusemodule.c, code.leo, fuse.py, xmp.py:
+	Syntax cleanup 1: strip leo markup.
+
+2006-05-24 05:04 +0000  dzsekijo  <dzsekijo>  (a2466ed1accd)
+
+	* ChangeLog, _fusemodule.c, fuse.py, xmp.py:
+	Revamp fs initialization code.
+
+2006-05-23 20:00 +0000  dzsekijo  <dzsekijo>  (6b3b309d48e3)
+
+	* _fusemodule.c:
+	make use of library opts also when FUSE_VERSION >= 25
+
+2006-05-23 18:23 +0000  dzsekijo  <dzsekijo>  (0f101358dd69)
+
+	* _fusemodule.c:
+	fix previous fix
+
+2006-05-23 16:00 +0000  dzsekijo  <dzsekijo>  (a3a10e33bb5e)
+
+	* ChangeLog, _fusemodule.c:
+	result of argument type check was ignored in FuseInvalidate(), fix
+	it
+
+2006-05-23 07:08 +0000  dzsekijo  <dzsekijo>  (d58976cd74ea)
+
+	* AUTHORS, ChangeLog, _fusemodule.c:
+	Update code so that it can be compiled against FUSE libs with API
+	from 21 to 26
+
+2006-05-23 07:02 +0000  dzsekijo  <dzsekijo>  (72ca1670afa8)
+
+	* Makefile: deleted file.
+	* ChangeLog, Makefile, setup.py, xmp.py:
+	Rebase build system on pkg-config.
+
+2006-05-23 06:53 +0000  dzsekijo  <dzsekijo>  (825d24362f5f)
+
+	* ChangeLog, xmp.py:
+	Fix statfs index mismatch in xmp.py
+
+2006-02-04 19:32 +0000  sdelafond  <sdelafond>  (51056cf0f8e1)
+
+	* ChangeLog, _fusemodule.c, fuse.py, xmp.py:
+	* Removed unnecessary "st->st_ino = 0" line in _fusemodule.c.
+	* Added __init__ argument handling in fuse.py. Command-line
+	arguments still take precedence over contructor ones.
+	* Removed unused os module from fuse.py.
+	* Changed def read(self, path, length, offset) to def read(self,
+	path, length, offset) so that len() can be used inside read().
+
+2005-09-19 00:43 +0000  sdelafond  <sdelafond>  (d1299c647953)
+
+	* _fusemodule.c, code.leo, fuse.py, xmp.py:
+	Changed license from GPL to LGPL, after approval from Steven James
+	and Jeff Epler.
+
+2005-04-07 18:25 +0000  sdelafond  <sdelafond>  (5293b014aa11)
+
+	* AUTHORS, ChangeLog, _fusemodule.c:
+	Added support for statfs.bavail so that df can correctly report disk
+	usage.
+
+2004-11-22 06:53 +0000  sdelafond  <sdelafond>  (a6fd1d240a9a)
+
+	* AUTHORS:
+	Put Steven James name in, removed mine: his fixes are much cleaner
+	than mine.
+
+2004-11-22 01:40 +0000  sdelafond  <sdelafond>  (6e12f1931f24)
+
+	* AUTHORS, ChangeLog, INSTALL, setup.py:
+	Took over maintainership.
+
+2004-11-11 15:41 +0000  mszeredi  <mszeredi>  (3f84c72d6872)
+
+	* README: new file.
+	* README:
+	importing sources
+
+2004-11-11 15:41 +0000  mszeredi  <mszeredi>  (37c8c74dde9d)
+
+	* AUTHORS, ChangeLog, INSTALL, Makefile, _fusemodule.c, code.leo,
+	fuse.py, setup.py, xmp.py: new file.
+	* AUTHORS, ChangeLog, INSTALL, Makefile, _fusemodule.c, code.leo,
+	fuse.py, setup.py, xmp.py:
+	Initial revision
+
